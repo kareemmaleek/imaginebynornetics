@@ -2,35 +2,56 @@ import React from "react";
 
 function gallery() {
   return (
-    <div className="w-full h-screen p-5 grid grid-cols-5 gap-2 overflow-y-scroll">
-      <div className="w-full h-auto grid grid-cols-1 gap-2">
-        <div className="w-full h-32 rounded-md">
-          <img src="/assets/images/imaginebynornetics-IBN027.png" alt="" />
-        </div>
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-      </div>
-      <div className="w-full h-auto grid grid-cols-1 gap-2">
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-      </div>
-      <div className="w-full h-auto grid grid-cols-1 gap-2">
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-      </div>
-      <div className="w-full h-auto grid grid-cols-1 gap-2">
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-      </div>
-      <div className="w-full h-auto grid grid-cols-1 gap-2">
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-72 bg-secondaryColor rounded-md"></div>
-        <div className="w-full h-32 bg-secondaryColor rounded-md"></div>
+    <div className="w-full h-screen overflow-y-scroll">
+      <div className="columns-5 gap-2 space-y-2">
+        <img
+          src="/assets/images/ai/1.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/9.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/10.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/11.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/3.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/11.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/5.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/11.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/9.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/10.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/2.png"
+          className="h-auto max-w-full rounded-lg"
+        />
+        <img
+          src="/assets/images/ai/10.png"
+          className="h-auto max-w-full rounded-lg"
+        />
       </div>
     </div>
   );
