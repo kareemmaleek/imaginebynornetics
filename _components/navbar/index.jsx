@@ -45,7 +45,10 @@ function NavBar() {
                 id="169"
                 className="w-4 h-4"
               />
-              <label for="169" class="ms-2 text-sm font-medium text-thirdColor">
+              <label
+                htmlFor="169"
+                class="ms-2 text-sm font-medium text-thirdColor"
+              >
                 16:9
               </label>
             </div>
@@ -57,7 +60,10 @@ function NavBar() {
                 id="43"
                 className="w-4 h-4"
               />
-              <label for="43" class="ms-2 text-sm font-medium text-thirdColor">
+              <label
+                htmlFor="43"
+                class="ms-2 text-sm font-medium text-thirdColor"
+              >
                 4:3
               </label>
             </div>
@@ -69,7 +75,10 @@ function NavBar() {
                 id="916"
                 className="w-4 h-4"
               />
-              <label for="916" class="ms-2 text-sm font-medium text-thirdColor">
+              <label
+                htmlFor="916"
+                class="ms-2 text-sm font-medium text-thirdColor"
+              >
                 9:16
               </label>
             </div>
@@ -81,7 +90,10 @@ function NavBar() {
                 id="219"
                 className="w-4 h-4"
               />
-              <label for="219" class="ms-2 text-sm font-medium text-thirdColor">
+              <label
+                htmlFor="219"
+                class="ms-2 text-sm font-medium text-thirdColor"
+              >
                 21:9
               </label>
             </div>
