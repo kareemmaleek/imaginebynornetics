@@ -1,8 +1,8 @@
+import Gallery from "@/_components/Gallery";
 import React from "react";
-import Home from "@/_components/home/index";
 
 function index() {
-  return <Home />;
+  return <Gallery />;
 }
 
 export default index;

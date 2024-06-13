@@ -1,16 +1,16 @@
 import { Download, Visibility, ZoomIn } from "@mui/icons-material";
 import React, { useEffect } from "react";
 
-function gallery() {
+function Gallery() {
   return (
     <>
-      <div className="w-full h-screen overflow-y-scroll">
-        <div className="columns-5 gap-2 space-y-2 w-full h-auto p-5">
-          {[...Array(10)].map((i, x) => {
+      <div className="w-full h-screen overflow-y-scroll p-5">
+        <div className="columns-5 gap-2 space-y-2 w-full h-auto">
+          {[...Array(50)].map((i, x) => {
             return (
               <div
                 key={x}
-                className="group w-auto h-auto relative cursor-zoom-in"
+                className="group w-auto h-auto relative cursor-zoom-in hover:scale-95 duration-300"
               >
                 <img
                   src={`/assets/images/ai/${x + 1}.png`}
@@ -39,4 +39,4 @@ function gallery() {
   );
 }
 
-export default gallery;
+export default Gallery;
