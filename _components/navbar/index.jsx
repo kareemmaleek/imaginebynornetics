@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import { ArtTrack, Login, Logout, Palette } from "@mui/icons-material";
 
 function NavBar() {
   return (
@@ -17,15 +18,39 @@ function NavBar() {
         </div>
       </div>
 
-      <div className="w-full h-[530px] p-5 flex-col">
+      <div className="w-full h-[300px] p-5 flex-col">
+        <h2 className="text-sm mb-5 bg-mainColor p-2 shadow-inner rounded-lg">
+          Hi <strong className="italic">adams14</strong>, welcome back. lets
+          show your ai arts to worlds!
+        </h2>
         <div className="w-full h-auto mb-5">
           <p className="text-xs text-acsentColor">Explore</p>
+          <Link href={"/"}>
+            <div className="w-full h-auto p-4 mt-2 group/home cursor-pointer active:bg-mainColor hover:bg-mainColor text-acsentColor rounded-lg">
+              <span className="font-bold active:text-thirdColor group-hover/home:text-thirdColor">
+                <SpaceDashboardIcon className="text-acsentColor" /> Home
+              </span>
+            </div>
+          </Link>
+        </div>
 
-          <div className="w-full h-auto p-4 mt-2 bg-mainColor text-acsentColor rounded-lg">
-            <span className="font-bold text-thirdColor">
-              <SpaceDashboardIcon className="text-acsentColor" /> Home
-            </span>
-          </div>
+        <div className="w-full h-auto mb-5">
+          <p className="text-xs text-acsentColor">Creator Menu</p>
+
+          <Link href={"/upload-arts"}>
+            <div className="w-full h-auto p-4 mt-2 group/upart cursor-pointer active:bg-mainColor hover:bg-mainColor text-acsentColor rounded-lg">
+              <span className="font-bold active:text-thirdColor group-hover/upart:text-thirdColor">
+                <Palette className="text-acsentColor" /> Upload Arts
+              </span>
+            </div>
+          </Link>
+          <Link href={"/my-collections"}>
+            <div className="w-full h-auto p-4 group/collect cursor-pointer active:bg-mainColor hover:bg-mainColor text-acsentColor rounded-lg">
+              <span className="font-bold active:text-thirdColor group-hover/collect:text-thirdColor">
+                <ArtTrack className="text-acsentColor" /> My Collections
+              </span>
+            </div>
+          </Link>
         </div>
 
         <div className="w-full h-auto">
@@ -101,15 +126,23 @@ function NavBar() {
         </div>
 
         <div className="w-full h-full relative">
-          <div className="absolute bottom-0 w-full h-auto border border-acsentColor rounded-md mb-5 p-3">
-            <p className="text-xs text-acsentColor mb-2">About</p>
-            <p className="text-xs text-thirdColor">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro,
-              in.
-            </p>
-            <p className="text-xs text-thirdColor mt-2">
-              Crafted by Nornetics, &copy;2023
-            </p>
+          <div className="absolute bottom-0">
+            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentColor  hover:text-mainColor">
+              Sign In as Creator <Login className="text-sm" />
+            </button>
+            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentColor  hover:text-mainColor">
+              Logout <Logout className="text-sm" />
+            </button>
+            <div className="w-full h-auto border border-acsentColor rounded-md p-3">
+              <p className="text-xs text-acsentColor mb-2">About</p>
+              <p className="text-xs text-thirdColor">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro,
+                in.
+              </p>
+              <p className="text-xs text-thirdColor mt-2">
+                Crafted by Nornetics, &copy;2023
+              </p>
+            </div>
           </div>
         </div>
       </div>

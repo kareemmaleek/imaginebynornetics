@@ -4,7 +4,7 @@ import NavBar from "../navbar";
 function Home({ children }) {
   return (
     <div className="w-full h-screen flex">
-      <div className="w-[250px] h-auto bg-secondaryColor relative">
+      <div className="w-[250px] h-full bg-secondaryColor relative shadow-lg">
         <NavBar />
       </div>
       <div className="w-full h-full">

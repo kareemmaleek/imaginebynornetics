@@ -10,7 +10,7 @@ function Gallery() {
             return (
               <div
                 key={x}
-                className="group w-auto h-auto relative cursor-zoom-in hover:scale-95 duration-300"
+                className="group w-auto h-auto relative shadow-lg cursor-zoom-in hover:scale-95 duration-300"
               >
                 <img
                   src={`/assets/images/ai/${x + 1}.png`}
