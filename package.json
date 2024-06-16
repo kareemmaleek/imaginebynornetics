@@ -13,7 +13,10 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.19",
+    "bcryptjs": "^2.4.3",
     "framer-motion": "^11.2.10",
+    "joi": "^17.13.1",
+    "mysql": "^2.18.1",
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18"

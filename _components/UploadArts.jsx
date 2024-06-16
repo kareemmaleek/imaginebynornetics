@@ -57,6 +57,12 @@ function UploadArts() {
             Upload Image
           </div>
 
+          <div className="w-auto h-auto p-3 rounded-lg bg-mainColor shadow-inner mb-5">
+            <p className="italic">
+              IBN022939.jpg <strong>selected</strong>
+            </p>
+          </div>
+
           <div className="flex items-center justify-center w-full mb-5">
             <label
               for="dropzone-file"

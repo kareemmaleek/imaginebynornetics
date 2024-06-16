@@ -21,7 +21,7 @@ function NavBar() {
       <div className="w-full h-[300px] p-5 flex-col">
         <h2 className="text-sm mb-5 bg-mainColor p-2 shadow-inner rounded-lg">
           Hi <strong className="italic">adams14</strong>, welcome back. lets
-          show your ai arts to worlds!
+          show your ai arts to the worlds!
         </h2>
         <div className="w-full h-auto mb-5">
           <p className="text-xs text-acsentColor">Explore</p>
@@ -127,10 +127,10 @@ function NavBar() {
 
         <div className="w-full h-full relative">
           <div className="absolute bottom-0">
-            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentColor  hover:text-mainColor">
+            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentBtn  hover:text-acsentColor">
               Sign In as Creator <Login className="text-sm" />
             </button>
-            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentColor  hover:text-mainColor">
+            <button className="w-full border border-acsentColor rounded-lg mb-5 text-sm p-2 hover:bg-acsentBtn  hover:text-acsentColor">
               Logout <Logout className="text-sm" />
             </button>
             <div className="w-full h-auto border border-acsentColor rounded-md p-3">

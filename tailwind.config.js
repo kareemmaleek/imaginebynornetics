@@ -16,7 +16,8 @@ module.exports = {
         'mainColor' : '#172a32',
         'secondaryColor' : '#1a313b',
         'acsentColor' : '#89beac',
-        'thirdColor': '#BAC7CE'
+        'thirdColor': '#BAC7CE',
+        'acsentBtn': '#2e3e49'
       }
     },
   },

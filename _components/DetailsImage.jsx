@@ -5,6 +5,7 @@ import {
   Download,
   Visibility,
 } from "@mui/icons-material";
+import Link from "next/link";
 import React from "react";
 
 function DetailsImage() {
@@ -13,9 +14,11 @@ function DetailsImage() {
       <div className="w-full h-screen flex p-5">
         <div className="w-8/12 h-full flex justify-center relative rounded-lg">
           <img src="./assets/images/ai/1.png" className="rounded-lg" />
-          <span className="absolute left-2 top-2 w-10 h-10 bg-secondaryColor hover:bg-acsentColor hover:text-mainColor cursor-pointer rounded-full flex justify-center items-center">
-            <ArrowBack />
-          </span>
+          <Link href={`/`}>
+            <span className="absolute left-2 top-2 w-10 h-10 bg-secondaryColor hover:bg-acsentColor hover:text-mainColor cursor-pointer rounded-full flex justify-center items-center">
+              <ArrowBack />
+            </span>
+          </Link>
         </div>
 
         <div className="w-4/12 h-full flex flex-col">
@@ -85,7 +88,7 @@ function DetailsImage() {
             <p className="text-xs italic mb-5 text-thirdColor">
               you can save to device for wallpaper or other needs
             </p>
-            <button className="w-full h-auto p-2 rounded-lg font-bold bg-mainColor hover:bg-acsentColor hover:text-mainColor duration-100">
+            <button className="w-full h-auto p-2 rounded-lg font-bold ring-1 ring-acsentColor hover:bg-acsentBtn hover:text-acsentColor duration-100">
               <Download className="animate-bounce" /> Download Image
             </button>
           </div>
