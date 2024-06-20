@@ -1,7 +1,63 @@
-import { HowToReg } from "@mui/icons-material";
-import React from "react";
+import { Error, HowToReg } from "@mui/icons-material";
+import axios from "axios";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 function Signup() {
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+
+  const route = useRouter();
+
+  const signUpProcess = async () => {
+    await axios
+      .post("/api/users/signup", {
+        email: email,
+        pwd: pwd,
+        confirmPwd: confirmPwd,
+      })
+      .then((response) => {
+        console.log(response);
+
+        if (response.data.error === 1) {
+          return Toastify({
+            text: response.data.message.includes("confirmPwd")
+              ? "Password confirmation does not match!"
+              : response.data.message,
+            duration: 3000,
+            close: true,
+            position: "center",
+            stopOnFocus: true,
+            className: "ibn-error",
+            style: {
+              background:
+                "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
+            },
+          }).showToast();
+        }
+
+        Toastify({
+          text: response.data.message + " Sign you in...",
+          duration: 3000,
+          close: true,
+          position: "center",
+          stopOnFocus: true,
+          escapeMarkup: true,
+          className: "ibn-success",
+          style: {
+            background:
+              "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+          },
+          callback: function () {
+            route.push("/");
+          },
+        }).showToast();
+      });
+  };
+
   return (
     <>
       <p className="text-sm italic mb-5">
@@ -16,6 +72,7 @@ function Signup() {
           id="email-log"
           placeholder="Email address"
           className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="w-full h-auto mb-5">
@@ -27,6 +84,7 @@ function Signup() {
           id="pwd-log"
           placeholder="Enter your password"
           className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+          onChange={(e) => setPwd(e.target.value)}
         />
       </div>
 
@@ -36,13 +94,17 @@ function Signup() {
         </label>
         <input
           type="password"
-          id="pwd-log"
+          id="cpwd-log"
           placeholder="Confirm your password"
           className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+          onChange={(e) => setConfirmPwd(e.target.value)}
         />
       </div>
 
-      <button className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold">
+      <button
+        onClick={() => signUpProcess()}
+        className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold"
+      >
         Sign Up <HowToReg />
       </button>
     </>
