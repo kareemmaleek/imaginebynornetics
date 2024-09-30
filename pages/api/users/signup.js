@@ -48,13 +48,11 @@ export default async function signup(req, res) {
           message: `Yeay! ${email} successfully registered!`,
         });
     } else {
-      return res
-        .status(200)
-        .json({
-          available: 0,
-          error: 1,
-          message: `Uh-No! ${email} already registered!`,
-        });
+      return res.status(200).json({
+        available: 0,
+        error: 1,
+        message: `Uh-No! ${email} already registered!`,
+      });
     }
   } catch (errs) {
     return res.status(403).json({ message: errs });

@@ -1,4 +1,4 @@
-import { Error, HowToReg } from "@mui/icons-material";
+import { Error, HowToReg, RotateRight } from "@mui/icons-material";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -10,9 +10,13 @@ function Signup() {
   const [pwd, setPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
 
+  const [signProgress, setSignProgress] = useState(false);
+
   const route = useRouter();
 
   const signUpProcess = async () => {
+    setSignProgress(true);
+
     await axios
       .post("/api/users/signup", {
         email: email,
@@ -36,6 +40,9 @@ function Signup() {
               background:
                 "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
             },
+            callback: function () {
+              setSignProgress(false);
+            },
           }).showToast();
         }
 
@@ -53,6 +60,25 @@ function Signup() {
           },
           callback: function () {
             route.push("/");
+          },
+        }).showToast();
+      })
+      .catch((error) => {
+        // console.log(error.response.data);
+        Toastify({
+          text: "ERRSERV CONNECTION, Please Contact DEV",
+          duration: 3000,
+          close: true,
+          position: "center",
+          stopOnFocus: true,
+          escapeMarkup: true,
+          className: "ibn-error",
+          style: {
+            background:
+              "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
+          },
+          callback: function () {
+            setSignProgress(false);
           },
         }).showToast();
       });
@@ -101,12 +127,19 @@ function Signup() {
         />
       </div>
 
-      <button
-        onClick={() => signUpProcess()}
-        className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold"
-      >
-        Sign Up <HowToReg />
-      </button>
+      {signProgress ? (
+        <>
+          <RotateRight className="animate-spin" /> Sign Up Progress...
+        </>
+      ) : (
+        <button
+          onClick={() => signUpProcess()}
+          className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold"
+        >
+          Sign Up
+          <HowToReg />
+        </button>
+      )}
     </>
   );
 }
