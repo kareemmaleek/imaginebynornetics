@@ -35,11 +35,7 @@ function Signup() {
             close: true,
             position: "center",
             stopOnFocus: true,
-            className: "ibn-error",
-            style: {
-              background:
-                "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
-            },
+            className: "ibnerror",
             callback: function () {
               setSignProgress(false);
             },

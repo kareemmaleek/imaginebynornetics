@@ -16,9 +16,16 @@
   }
 }
 
-body{
+body {
   background-color: #172a32;
   color: #89beac;
   font-family: "Titillium Web", sans-serif;
 }
 
+.ibn-error {
+  background: linear-gradient(
+    109.6deg,
+    rgba(217, 67, 67, 1) 11.2%,
+    rgba(242, 106, 75, 1) 100.6%
+  );
+}
