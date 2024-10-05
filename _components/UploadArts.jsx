@@ -1,7 +1,39 @@
+import { headers } from "@/next.config";
 import { Public, UploadFile } from "@mui/icons-material";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function UploadArts() {
+  const [images, setImages] = useState([]);
+  const [dataImage, setDataImage] = useState([]);
+
+  const selectedFiles = (e) => {
+    const cv = Array.from(e.target.files);
+
+    setDataImage(cv);
+    setImages(
+      cv.map((item) => {
+        return { name: item.name };
+      })
+    );
+  };
+
+  const uploadNow = async () => {
+    const data = new FormData();
+
+    dataImage.forEach((item) => {
+      data.append("images", item);
+    });
+
+    await axios.post("/api/upload/", data).then((response) => {
+      console.log(response);
+    });
+  };
+
+  useEffect(() => {
+    console.log(dataImage);
+  }, [dataImage]);
+
   return (
     <>
       <div className="w-full h-screen p-10">
@@ -58,9 +90,15 @@ function UploadArts() {
           </div>
 
           <div className="w-auto h-auto p-3 rounded-lg bg-mainColor shadow-inner mb-5">
-            <p className="italic">
-              IBN022939.jpg <strong>selected</strong>
-            </p>
+            {images.map((item) => {
+              return (
+                <>
+                  <p className="italic">
+                    {item.name} <strong>selected</strong>
+                  </p>
+                </>
+              );
+            })}
           </div>
 
           <div className="flex items-center justify-center w-full mb-5">
@@ -92,15 +130,20 @@ function UploadArts() {
               </div>
               <input
                 id="dropzone-file"
+                onChange={(e) => selectedFiles(e)}
                 type="file"
-                accept="image/*"
+                multiple="multiple"
+                //accept="image/*"
                 className="hidden"
               />
             </label>
           </div>
 
           <div className="w-full h-auto">
-            <button className="p-3 mb-5 border border-acsentColor rounded-lg float-end text-sm hover:bg-acsentColor hover:text-mainColor hover:font-bold">
+            <button
+              onClick={() => uploadNow()}
+              className="p-3 mb-5 border border-acsentColor rounded-lg float-end text-sm hover:bg-acsentColor hover:text-mainColor hover:font-bold"
+            >
               <Public /> Publish Now!
             </button>
           </div>
