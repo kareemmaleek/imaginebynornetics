@@ -2,12 +2,38 @@ import { headers } from "@/next.config";
 import { Public, UploadFile } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 function UploadArts() {
   const [images, setImages] = useState([]);
   const [dataImage, setDataImage] = useState([]);
+  const [AIEngine, setAIEngine] = useState("");
+  const [otherSection, setOtherSection] = useState(false);
 
   const selectedFiles = (e) => {
+    const file = e.target.files;
+
+    for (var i = 0; i < file.length; i++) {
+      //console.log(file[i]);
+
+      const filter = ["image/jpeg", "image/jpg", "image/png"];
+      if (!filter.includes(file[i].type)) {
+        return Toastify({
+          text: "Oopss! only accept image format",
+          duration: 3000,
+          close: true,
+          position: "center",
+          stopOnFocus: true,
+          className: "ibnerror",
+          style: {
+            background:
+              "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+          },
+        }).showToast();
+      }
+    }
+
     const cv = Array.from(e.target.files);
 
     setDataImage(cv);
@@ -21,18 +47,96 @@ function UploadArts() {
   const uploadNow = async () => {
     const data = new FormData();
 
+    if (dataImage.length <= 0)
+      return Toastify({
+        text: "Choose at least 1 image",
+        duration: 3000,
+        close: true,
+        position: "center",
+        stopOnFocus: true,
+        className: "ibnerror",
+        style: {
+          background:
+            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+        },
+      }).showToast();
+
+    if (AIEngine === "")
+      return Toastify({
+        text: "Please select AI Engine",
+        duration: 3000,
+        close: true,
+        position: "center",
+        stopOnFocus: true,
+        className: "ibnerror",
+        style: {
+          background:
+            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+        },
+      }).showToast();
+
     dataImage.forEach((item) => {
       data.append("images", item);
     });
+    data.append("engine", AIEngine);
 
-    await axios.post("/api/upload/", data).then((response) => {
-      console.log(response);
+    await axios.post("/api/upload/art/", data).then((response) => {
+      console.log(response.data.error);
+
+      if (response.data.error === 0)
+        return Toastify({
+          text: "AI Art Uploaded Successfully!",
+          duration: 2000,
+          close: true,
+          position: "center",
+          stopOnFocus: true,
+          escapeMarkup: true,
+          className: "ibn-success",
+          style: {
+            background:
+              "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+          },
+          callback: function () {
+            setImages([]);
+            setOtherSection(false);
+            setAIEngine("");
+          },
+        }).showToast();
     });
+  };
+
+  const aiEngine = (e) => {
+    let engine = e.target.value;
+
+    if (engine === "Others") {
+      setOtherSection(true);
+    } else if (engine === "") {
+      setAIEngine("");
+      return Toastify({
+        text: "Please select AI Engine",
+        duration: 3000,
+        close: true,
+        position: "center",
+        stopOnFocus: true,
+        className: "ibnerror",
+        style: {
+          background:
+            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+        },
+      }).showToast();
+    } else {
+      setOtherSection(false);
+      setAIEngine(engine);
+    }
   };
 
   useEffect(() => {
     console.log(dataImage);
   }, [dataImage]);
+
+  useEffect(() => {
+    console.log(AIEngine);
+  }, [AIEngine]);
 
   return (
     <>
@@ -51,26 +155,31 @@ function UploadArts() {
             </label>
             <select
               id="engine"
+              onChange={(e) => aiEngine(e)}
               className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
             >
               <option value="">Select AI Engine...</option>
-              <option value="">Midjourney</option>
-              <option value="">Stablediffusion</option>
-              <option value="">Bing AI</option>
-              <option value="">Others</option>
+              <option value="Midjourney">Midjourney</option>
+              <option value="Stablediffusion">Stablediffusion</option>
+              <option value="Bing AI">Bing AI</option>
+              <option value="Others">Others</option>
             </select>
           </div>
 
           {/* VISIBLE IF OTHERS ENGINE SELECTED */}
-          <div className="w-full h-auto mb-5">
-            <input
-              type="text"
-              placeholder="What ai engine do you use?"
-              className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
-            />
-          </div>
 
-          <div className="w-full h-auto mb-5">
+          {otherSection && (
+            <div className="w-full h-auto mb-5">
+              <input
+                onChange={(e) => setAIEngine(e.target.value)}
+                type="text"
+                placeholder="What ai engine do you use?"
+                className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+              />
+            </div>
+          )}
+
+          {/* <div className="w-full h-auto mb-5">
             <label htmlFor="engine" className="font-bold text-thirdColor">
               Aspect Ratio
             </label>
@@ -83,7 +192,7 @@ function UploadArts() {
               <option value="">5:3</option>
               <option value="">21:9</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="w-full h-auto mb-5 font-bold text-thirdColor">
             Upload Image
@@ -133,7 +242,7 @@ function UploadArts() {
                 onChange={(e) => selectedFiles(e)}
                 type="file"
                 multiple="multiple"
-                //accept="image/*"
+                accept="image/*"
                 className="hidden"
               />
             </label>
