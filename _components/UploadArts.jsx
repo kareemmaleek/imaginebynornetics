@@ -1,5 +1,5 @@
 import { headers } from "@/next.config";
-import { Public, UploadFile } from "@mui/icons-material";
+import { Public, RotateRight, UploadFile } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Toastify from "toastify-js";
@@ -10,6 +10,7 @@ function UploadArts() {
   const [dataImage, setDataImage] = useState([]);
   const [AIEngine, setAIEngine] = useState("");
   const [otherSection, setOtherSection] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(false);
 
   const selectedFiles = (e) => {
     const file = e.target.files;
@@ -57,52 +58,82 @@ function UploadArts() {
         className: "ibnerror",
         style: {
           background:
-            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+            "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
         },
       }).showToast();
 
     if (AIEngine === "")
       return Toastify({
         text: "Please select AI Engine",
-        duration: 3000,
+        duration: 2000,
         close: true,
         position: "center",
         stopOnFocus: true,
         className: "ibnerror",
         style: {
           background:
-            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+            "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
         },
       }).showToast();
+
+    setUploadProgress(true);
 
     dataImage.forEach((item) => {
       data.append("images", item);
     });
     data.append("engine", AIEngine);
 
-    await axios.post("/api/upload/art/", data).then((response) => {
-      console.log(response.data.error);
+    await axios
+      .post("/api/upload/art/", data)
+      .then((response) => {
+        console.log(response.data.error);
 
-      if (response.data.error === 0)
+        if (response.data.error === 0)
+          return Toastify({
+            text: "AI Art Uploaded Successfully!",
+            duration: 2000,
+            close: true,
+            position: "center",
+            stopOnFocus: true,
+            escapeMarkup: true,
+            className: "ibn-success",
+            style: {
+              background:
+                "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+            },
+            callback: function () {
+              setImages([]);
+              setOtherSection(false);
+              setAIEngine("");
+              setDataImage([]);
+              setUploadProgress(false);
+            },
+          }).showToast();
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+
         return Toastify({
-          text: "AI Art Uploaded Successfully!",
+          text: error.response.data.message,
           duration: 2000,
           close: true,
           position: "center",
           stopOnFocus: true,
           escapeMarkup: true,
-          className: "ibn-success",
+          className: "ibn-error",
           style: {
             background:
-              "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+              "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
           },
           callback: function () {
             setImages([]);
             setOtherSection(false);
             setAIEngine("");
+            setDataImage([]);
+            setUploadProgress(false);
           },
         }).showToast();
-    });
+      });
   };
 
   const aiEngine = (e) => {
@@ -249,12 +280,19 @@ function UploadArts() {
           </div>
 
           <div className="w-full h-auto">
-            <button
-              onClick={() => uploadNow()}
-              className="p-3 mb-5 border border-acsentColor rounded-lg float-end text-sm hover:bg-acsentColor hover:text-mainColor hover:font-bold"
-            >
-              <Public /> Publish Now!
-            </button>
+            {uploadProgress ? (
+              <div className="text-center">
+                <RotateRight className="animate-spin" />
+                Upload Progress...
+              </div>
+            ) : (
+              <button
+                onClick={() => uploadNow()}
+                className="p-3 mb-5 border border-acsentColor rounded-lg float-end text-sm hover:bg-acsentColor hover:text-mainColor hover:font-bold"
+              >
+                <Public /> Publish Now!
+              </button>
+            )}
           </div>
         </div>
       </div>
