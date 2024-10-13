@@ -9,7 +9,7 @@ const sizeOf = require("image-size");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads");
+    cb(null, "./public/assets/uploads");
   },
   filename: function (req, file, cb) {
     const imageID = crypto.randomBytes(16).toString("hex");
@@ -60,6 +60,15 @@ export default async function uploadImages(req, res) {
       const fileName = item.filename;
       const fileSize = item.size;
       const filePath = path.join(__dirname, "../../../../../", item.path);
+      const fileType = item.mimetype;
+      const mimeType = ["image/png", "image/jpg"];
+
+      console.log(fileType);
+
+      if (!mimeType.includes(fileType))
+        return res
+          .status(400)
+          .json({ error: 1, message: "Image format not allowed" });
 
       const imgDimension = sizeOf(filePath);
       const fileAspectRatio = getAspectRatio(
@@ -84,7 +93,7 @@ export default async function uploadImages(req, res) {
             0,
             fileSize,
             fileAspectRatio,
-            item.path,
+            item.path.replaceAll("\\", "/").replace("public", ""),
           ]
         );
 

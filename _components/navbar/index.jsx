@@ -2,8 +2,12 @@ import Link from "next/link";
 import React from "react";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import { ArtTrack, Login, Logout, Palette } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 function NavBar() {
+  const router = useRouter();
+  const currentPath = router.pathname;
+
   return (
     <>
       <div className="w-full h-auto flex p-5 items-center justify-center">
@@ -53,77 +57,78 @@ function NavBar() {
           </Link>
         </div>
 
-        <div className="w-full h-auto">
-          <p className="text-xs text-acsentColor">Filters</p>
+        {currentPath === "/" ? (
+          <div className="w-full h-auto">
+            <p className="text-xs text-acsentColor">Filters</p>
+            <div className="w-full h-auto p-4 mt-2 bg-mainColor text-acsentColor rounded-lg">
+              <div className="w-full h-auto mb-3">
+                <span className="text-xs">Aspect Ratio</span>
+              </div>
 
-          <div className="w-full h-auto p-4 mt-2 bg-mainColor text-acsentColor rounded-lg">
-            <div className="w-full h-auto mb-3">
-              <span className="text-xs">Aspect Ratio</span>
-            </div>
-
-            <div class="flex items-center mb-2">
-              <input
-                defaultChecked
-                type="radio"
-                name="difa"
-                value=""
-                id="169"
-                className="w-4 h-4"
-              />
-              <label
-                htmlFor="169"
-                class="ms-2 text-sm font-medium text-thirdColor"
-              >
-                16:9
-              </label>
-            </div>
-            <div class="flex items-center mb-2">
-              <input
-                type="radio"
-                name="difa"
-                value=""
-                id="43"
-                className="w-4 h-4"
-              />
-              <label
-                htmlFor="43"
-                class="ms-2 text-sm font-medium text-thirdColor"
-              >
-                4:3
-              </label>
-            </div>
-            <div class="flex items-center mb-2">
-              <input
-                type="radio"
-                name="difa"
-                value=""
-                id="916"
-                className="w-4 h-4"
-              />
-              <label
-                htmlFor="916"
-                class="ms-2 text-sm font-medium text-thirdColor"
-              >
-                9:16
-              </label>
-            </div>
-            <div class="flex items-center mb-2">
-              <input
-                type="radio"
-                name="difa"
-                value=""
-                id="219"
-                className="w-4 h-4"
-              />
-              <label
-                htmlFor="219"
-                class="ms-2 text-sm font-medium text-thirdColor"
-              >
-                21:9
-              </label>
+              <div class="flex items-center mb-2">
+                <input
+                  defaultChecked
+                  type="radio"
+                  name="difa"
+                  value=""
+                  id="169"
+                  className="w-4 h-4"
+                />
+                <label
+                  htmlFor="169"
+                  class="ms-2 text-sm font-medium text-thirdColor"
+                >
+                  16:9
+                </label>
+              </div>
+              <div class="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name="difa"
+                  value=""
+                  id="43"
+                  className="w-4 h-4"
+                />
+                <label
+                  htmlFor="43"
+                  class="ms-2 text-sm font-medium text-thirdColor"
+                >
+                  4:3
+                </label>
+              </div>
+              <div class="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name="difa"
+                  value=""
+                  id="916"
+                  className="w-4 h-4"
+                />
+                <label
+                  htmlFor="916"
+                  class="ms-2 text-sm font-medium text-thirdColor"
+                >
+                  9:16
+                </label>
+              </div>
+              <div class="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name="difa"
+                  value=""
+                  id="219"
+                  className="w-4 h-4"
+                />
+                <label
+                  htmlFor="219"
+                  class="ms-2 text-sm font-medium text-thirdColor"
+                >
+                  21:9
+                </label>
+              </div>
             </div>
           </div>
-        </div>
+        ) : null}
 
         <div className="w-full h-full relative">
           <div className="absolute bottom-0">

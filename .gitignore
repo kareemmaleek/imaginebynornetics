@@ -34,4 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-public/assets/images/ai/*.png
+
+#assets
+/public/assets/images/ai/*.png
+/public/assets/uploads
