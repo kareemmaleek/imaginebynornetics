@@ -1,4 +1,4 @@
-import { Download, Visibility, ZoomIn } from "@mui/icons-material";
+import { IconDownload, IconEye, IconZoomIn } from "@tabler/icons-react";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -40,34 +40,41 @@ function Gallery() {
 
   return (
     <>
-      <div className="w-full h-screen overflow-y-scroll p-5">
-        <div className="columns-5 gap-2 space-y-2 w-full h-auto">
+      <div className="w-full h-screen overflow-y-scroll p-3 md:p-5">
+        <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-0 space-y-2 w-full h-auto">
           {gallery.map((item, x) => {
             return (
-              <Link href={`/details/${item.id}`}>
+              <Link href={`/details/${item.uid}`}>
                 <div
                   key={x}
                   className="group w-auto h-auto relative shadow-lg cursor-zoom-in hover:scale-95 duration-300"
                 >
                   <Image
                     src={`${item.img_path}`}
-                    className="h-auto max-w-full rounded-lg"
+                    className="h-auto max-w-full"
                     alt=""
                     width={350}
                     height={500}
                     style={{ width: "100%", height: "auto" }}
                   />
-                  <div className="hidden bg-secondaryColor w-full h-full absolute top-0 left-0 group-hover:flex justify-center items-center rounded-lg opacity-70">
+                  <div className="hidden bg-secondaryColor/60 w-full h-full absolute top-0 left-0 group-hover:flex justify-center items-center">
                     <div className="flex-col">
-                      <div className="text-xl text-center mb-3 font-bold">
-                        <ZoomIn className="text-2xl" />
+                      {/* <div className="text-sm text-center mb-3 font-bold p-2 px-3 rounded-full bg-mainColor ">
                         Details
-                      </div>
-                      <div className="text-sm text-center">
+                      </div> */}
+                      <div className="text-sm text-center mb-3">
                         <span className="mr-3">
-                          <Visibility className="text-sm" /> {item.img_views}
+                          <IconEye className="inline-block mr-1" size={14} />
+                          {item.img_views}
                         </span>
-                        <Download className="text-sm" /> {item.img_download}
+                        <IconDownload className="inline-block mr-1" size={14} />
+                        {item.img_download}
+                      </div>
+                      <div className="text-xs text-center p-2 px-3 bg-mainColor text-acsentColor rounded-full ">
+                        by {""}
+                        <span className="font-bold underline cursor-pointer">
+                          {item.created_by}
+                        </span>
                       </div>
                     </div>
                   </div>

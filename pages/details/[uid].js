@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 
 function imgDetails() {
   const router = useRouter();
-  const [id, setID] = useState("");
+  const [uid, setUID] = useState("");
 
   useEffect(() => {
-    if (router.isReady) setID(router.query.id);
+    if (router.isReady) setUID(router.query.uid);
   }, [router.isReady]);
 
-  return <>{id !== "" ? <DetailsImage img_id={id} /> : null}</>;
+  return <>{uid !== "" ? <DetailsImage img_id={uid} /> : null}</>;
 }
 
 export default imgDetails;

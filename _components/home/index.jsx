@@ -1,18 +1,62 @@
-import React, { Suspense } from "react";
+import React, { useState } from "react";
 import NavBar from "../navbar";
+import { IconMenu2, IconX } from "@tabler/icons-react";
 
 function Home({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-[250px] h-full bg-secondaryColor relative shadow-lg">
+    <div className="w-full h-screen flex relative">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block w-[250px] min-w-36 h-full bg-secondaryColor relative shadow-lg">
         <NavBar />
       </div>
-      <div className="w-full h-full">
-        <main>{children}</main>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar Drawer */}
+      <div
+        className={`fixed top-0 left-0 w-[280px] h-full bg-secondaryColor shadow-lg z-50 transform transition-transform duration-300 md:hidden ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <button
+          onClick={() => setSidebarOpen(false)}
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-mainColor hover:bg-acsentBtn text-acsentColor z-50"
+        >
+          <IconX size={18} />
+        </button>
+        <NavBar onNavigate={() => setSidebarOpen(false)} />
       </div>
 
-      <div className="absolute bottom-10 right-10 italic text-xs p-3 rounded-lg bg-black/30 backdrop-blur-md">
-        <p className="">imaginebynornetics app version v1.0</p>
+      {/* Main Content */}
+      <div className="w-full h-full overflow-hidden">
+        {/* Mobile Header */}
+        <div className="md:hidden w-full h-14 bg-secondaryColor flex items-center px-4 shadow-md">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-mainColor text-acsentColor"
+          >
+            <IconMenu2 size={24} />
+          </button>
+          <img
+            src="./assets/images/logo-ibn.png"
+            alt="imaginebynornetics"
+            width={120}
+            className="ml-3"
+          />
+        </div>
+        <main className="h-[calc(100vh-3.5rem)] md:h-full">{children}</main>
+      </div>
+
+      <div className="hidden md:block absolute bottom-10 right-10 italic text-xs p-3 rounded-lg bg-black/30 backdrop-blur-md">
+        <p>imaginebynornetics app version v1.0</p>
       </div>
     </div>
   );

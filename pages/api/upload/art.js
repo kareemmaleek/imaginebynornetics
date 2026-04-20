@@ -1,5 +1,8 @@
 import moment from "moment";
 import { execQuery } from "@/config/db";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "ibn_secret_key_2024";
 import xbytes from "xbytes";
 
 const multer = require("multer");
@@ -47,10 +50,22 @@ export default async function uploadImages(req, res) {
   if (req.method !== "POST")
     return res.status(403).json({ message: "Not Allowed!" });
 
+  // Extract user from token
+  let createdBy = null;
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    try {
+      const decoded = jwt.verify(authHeader.split(" ")[1], JWT_SECRET);
+      createdBy = decoded.uid;
+    } catch (e) {
+      // token invalid, use default null
+    }
+  }
+
   await upload.array("images", 12)(req, res, (err) => {
     if (err) return res.status(400).json({ error: 1, message: err.code });
 
-    const { engine } = req.body;
+    const { engine, aspect_ratio } = req.body;
 
     res.req.files.map(async (item) => {
       // console.log(item.filename);
@@ -61,7 +76,7 @@ export default async function uploadImages(req, res) {
       const fileSize = item.size;
       const filePath = path.join(__dirname, "../../../../../", item.path);
       const fileType = item.mimetype;
-      const mimeType = ["image/png", "image/jpg"];
+      const mimeType = ["image/png", "image/jpg", "image/jpeg"];
 
       console.log(fileType);
 
@@ -71,30 +86,26 @@ export default async function uploadImages(req, res) {
           .json({ error: 1, message: "Image format not allowed" });
 
       const imgDimension = sizeOf(filePath);
-      const fileAspectRatio = getAspectRatio(
-        imgDimension.width,
-        imgDimension.height
-      );
+      const fileAspectRatio =
+        aspect_ratio || getAspectRatio(imgDimension.width, imgDimension.height);
 
-      const dateNow = moment().format();
-      const id = crypto.randomUUID().toString();
+      const uid = crypto.randomUUID();
 
       try {
         const query = await execQuery(
-          "INSERT INTO images (id, img_name, status, created_date, created_by, img_engine, img_views, img_download, file_size, img_ratio, img_path) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO images (uid, img_name, status, created_by, img_engine, img_views, img_download, file_size, img_ratio, img_path) VALUES (?,?,?,?,?,?,?,?,?,?)",
           [
-            id,
+            uid,
             fileName,
             0,
-            dateNow,
-            "imaginebynornetics",
+            createdBy,
             engine,
             0,
             0,
             fileSize,
             fileAspectRatio,
             item.path.replaceAll("\\", "/").replace("public", ""),
-          ]
+          ],
         );
 
         res.status(200).json({

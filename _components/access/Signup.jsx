@@ -1,11 +1,11 @@
-import { Error, HowToReg, RotateRight } from "@mui/icons-material";
+import { IconRotateClockwise, IconUserCheck } from "@tabler/icons-react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 
-function Signup() {
+function Signup({ onNavigate }) {
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
@@ -36,6 +36,10 @@ function Signup() {
             position: "center",
             stopOnFocus: true,
             className: "ibnerror",
+            style: {
+              background:
+                "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
+            },
             callback: function () {
               setSignProgress(false);
             },
@@ -43,7 +47,7 @@ function Signup() {
         }
 
         Toastify({
-          text: response.data.message + " Sign you in...",
+          text: response.data.message,
           duration: 3000,
           close: true,
           position: "center",
@@ -51,11 +55,15 @@ function Signup() {
           escapeMarkup: true,
           className: "ibn-success",
           style: {
-            background:
-              "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+            background: response.data.message.includes(
+              "successfully registered",
+            )
+              ? "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )"
+              : "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
           },
           callback: function () {
-            route.push("/");
+            if (onNavigate) onNavigate();
+            route.push("/access");
           },
         }).showToast();
       })
@@ -125,7 +133,8 @@ function Signup() {
 
       {signProgress ? (
         <>
-          <RotateRight className="animate-spin" /> Sign Up Progress...
+          <IconRotateClockwise className="animate-spin inline-block mr-2" />{" "}
+          Sign Up Progress...
         </>
       ) : (
         <button
@@ -133,7 +142,7 @@ function Signup() {
           className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold"
         >
           Sign Up
-          <HowToReg />
+          <IconUserCheck className="inline-block ml-2" />
         </button>
       )}
     </>

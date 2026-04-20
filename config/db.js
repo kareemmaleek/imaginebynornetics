@@ -1,34 +1,34 @@
-const { createPool } = require("mysql");
+const mysql = require("mysql2/promise");
 
-const pool = createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  port: "3306",
-  database: "imaginebynornetics",
-});
+const dbConfig = {
+  host: process.env.NEXT_PUBLIC_DB_HOST,
+  user: process.env.NEXT_PUBLIC_DB_USER || "root",
+  password: process.env.NEXT_PUBLIC_DB_PASSWD || "",
+  port: parseInt(process.env.NEXT_PUBLIC_DB_PORT),
+  database: process.env.NEXT_PUBLIC_DB_NAME || "imaginebynornetics",
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 0,
+  idleTimeout: 60000,
+};
 
-pool.getConnection((err) => {
-  if (err) {
-    return console.log("DB Connection Error!");
+// Cache pool on globalThis to prevent creating new pools on every HMR reload
+function getPool() {
+  if (!global._mysqlPool) {
+    global._mysqlPool = mysql.createPool(dbConfig);
   }
-  console.log("DB Connected!");
-});
+  return global._mysqlPool;
+}
 
-const execQuery = (query, arr) => {
-  return new Promise((resolve, reject) => {
-    try {
-      pool.query(query, arr, (err, data) => {
-        if (err) {
-          console.log("Error when executing query...");
-          reject(err);
-        }
-        resolve(data);
-      });
-    } catch (err) {
-      reject(data);
-    }
-  });
+const execQuery = async (query, arr) => {
+  const pool = getPool();
+  try {
+    const [rows] = await pool.execute(query, arr);
+    return rows;
+  } catch (err) {
+    console.error("Error when executing query:", err.message);
+    throw err;
+  }
 };
 
 module.exports = { execQuery };

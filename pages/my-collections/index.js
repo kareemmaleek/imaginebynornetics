@@ -1,14 +1,15 @@
-
 import Loading from '@/_components/Loading'
 import MyCollections from '@/_components/MyCollections'
-import React, { Suspense, useEffect, useState } from 'react'
+import ProtectedRoute from '@/common/ProtectedRoute'
+import React, { Suspense } from 'react'
 
 function index() {
-
   return (
-    <Suspense fallback={<Loading/>}>
-    <MyCollections/>
-    </Suspense>
+    <ProtectedRoute>
+      <Suspense fallback={<Loading/>}>
+        <MyCollections/>
+      </Suspense>
+    </ProtectedRoute>
   )
 }
 

@@ -1,7 +1,6 @@
-import React from "react";
 import usersValidator from "@/common/usersValidation";
 import { execQuery } from "@/config/db";
-import moment from "moment";
+import { generateUsername } from "@/common/usernameGenerator";
 
 export default async function signup(req, res) {
   try {
@@ -19,25 +18,39 @@ export default async function signup(req, res) {
         .json({ error: 1, message: error.details[0].message });
     }
 
-    // SIGNUP PROCCESS
-    // #CHECK USERS AVAILABLE
+    // CHECK IF EMAIL ALREADY EXISTS
     const query = await execQuery(
-      `SELECT email FROM users WHERE email = '${email}'`,
-      []
+      "SELECT email FROM users WHERE email = ?",
+      [email],
     );
 
     if (query.length === 0) {
-      //res.status(200).json({available: 1,message: `Yeay! ${email} is available for register!`})
-
-      const dateNow = moment().format();
       const uuid = require("crypto").randomUUID().toString();
       const bcrypt = require("bcryptjs");
       const enc = bcrypt.genSaltSync(10);
       const finalEnc = bcrypt.hashSync(pwd, enc);
 
+      // Generate unique username
+      let username = generateUsername();
+      let usernameExists = true;
+      let attempts = 0;
+
+      while (usernameExists && attempts < 10) {
+        const checkUsername = await execQuery(
+          "SELECT username FROM users WHERE username = ?",
+          [username],
+        );
+        if (checkUsername.length === 0) {
+          usernameExists = false;
+        } else {
+          username = generateUsername();
+          attempts++;
+        }
+      }
+
       const queryReg = await execQuery(
-        `INSERT INTO users (uid, email, password, createdDate) VALUES (?,?,?,?)`,
-        [uuid, email, finalEnc, dateNow]
+        "INSERT INTO users (uid, email, password, username) VALUES (?,?,?,?)",
+        [uuid, email, finalEnc, username],
       );
       let { affectedRows } = queryReg;
 
@@ -55,6 +68,7 @@ export default async function signup(req, res) {
       });
     }
   } catch (errs) {
+    console.error("Signup error:", errs);
     return res.status(403).json({ message: errs });
   }
 }

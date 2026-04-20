@@ -11,14 +11,14 @@ export default async function upViews(req, res) {
 
   try {
     const queryGet = await execQuery(
-      "SELECT img_views FROM images WHERE id = ?",
-      [id]
+      "SELECT img_views FROM images WHERE uid = ?",
+      [id],
     );
 
     const currentViews = queryGet[0].img_views;
     const increment = currentViews + 1;
 
-    const query = execQuery("UPDATE images SET img_views = ?  WHERE id = ?", [
+    const query = execQuery("UPDATE images SET img_views = ?  WHERE uid = ?", [
       increment,
       id,
     ]);

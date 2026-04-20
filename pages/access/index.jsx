@@ -8,9 +8,9 @@ function index() {
 
   return (
     <>
-      <div className="w-full h-screen flex flex-col justify-center items-center">
-        <div className="w-6/12 h-[500px] rounded-lg bg-secondaryColor shadow-lg flex">
-          <div className="w-6/12 h-full flex justify-center items-center">
+      <div className="w-full h-screen flex flex-col justify-center items-center p-4 md:p-0">
+        <div className="w-full md:w-8/12 lg:w-6/12 h-auto md:h-[500px] rounded-lg bg-secondaryColor shadow-lg flex flex-col md:flex-row">
+          <div className="w-full md:w-6/12 h-auto py-10 md:h-full flex justify-center items-center">
             <div className="w-auto h-auto flex flex-col">
               <div className="w-full h-auto flex justify-center items-center mb-3">
                 <div className="flex">
@@ -33,13 +33,13 @@ function index() {
               </div>
             </div>
           </div>
-          <div className="w-6/12 h-full p-10 flex justify-center items-center">
+          <div className="w-full md:w-6/12 h-full p-6 md:p-10 flex justify-center items-center">
             <div className="w-full h-auto">
               {!accessOpt ? <Login /> : <Signup />}
               <p className="mt-5 text-sm">
                 {!accessOpt
-                  ? "Don't have an account?"
-                  : "Already have an account?"}
+                  ? "Don't have an account? "
+                  : "Already have an account? "}
                 <strong
                   onClick={() => setAccessOpt(!accessOpt)}
                   className="italic cursor-pointer"
