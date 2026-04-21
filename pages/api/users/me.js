@@ -24,6 +24,7 @@ export default async function me(req, res) {
         uid: decoded.uid,
         email: decoded.email,
         username: decoded.username,
+        is_admin: decoded.is_admin || false,
       },
     });
   } catch (err) {

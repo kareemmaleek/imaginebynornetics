@@ -19,7 +19,7 @@ export default async function login(req, res) {
 
     // Find user by email
     const users = await execQuery(
-      "SELECT uid, email, password, username FROM users WHERE email = ?",
+      "SELECT uid, email, password, username, is_admin FROM users WHERE email = ?",
       [email],
     );
 
@@ -46,6 +46,7 @@ export default async function login(req, res) {
         uid: user.uid,
         email: user.email,
         username: user.username,
+        is_admin: user.is_admin === 1 || user.is_admin === true,
       },
       JWT_SECRET,
       { expiresIn: "7d" },
@@ -59,6 +60,7 @@ export default async function login(req, res) {
         uid: user.uid,
         email: user.email,
         username: user.username,
+        is_admin: user.is_admin === 1 || user.is_admin === true,
       },
     });
   } catch (err) {

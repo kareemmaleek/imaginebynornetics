@@ -1,6 +1,13 @@
 import { headers } from "@/next.config";
-import { IconRotateClockwise, IconWorld, IconX } from "@tabler/icons-react";
+import {
+  IconRotateClockwise,
+  IconWorld,
+  IconX,
+  IconCaretDownFilled,
+  IconChevronDown,
+} from "@tabler/icons-react";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
@@ -12,6 +19,32 @@ function UploadArts() {
   const [otherSection, setOtherSection] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(false);
   const [aspectRatio, setAspectRatio] = useState("");
+  const [engineOpen, setEngineOpen] = useState(false);
+  const engineRef = React.useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (engineRef.current && !engineRef.current.contains(event.target)) {
+        setEngineOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const engines = [
+    { label: "Midjourney", value: "Midjourney" },
+    { label: "Gemini", value: "Gemini" },
+    { label: "Leonardo AI", value: "LeonardoAI" },
+    { label: "Stable Diffusion", value: "StableDiffusion" },
+    { label: "DALL·E", value: "DALLE" },
+    { label: "Adobe Firefly", value: "Firefly" },
+    { label: "Ideogram", value: "Ideogram" },
+    { label: "Runway", value: "Runway" },
+    { label: "Pika", value: "Pika" },
+    { label: "Bing Image Creator", value: "BingImageCreator" },
+    { label: "Others", value: "Others" },
+  ];
 
   const selectedFiles = (e) => {
     const file = e.target.files;
@@ -27,7 +60,7 @@ function UploadArts() {
           close: true,
           position: "center",
           stopOnFocus: true,
-          className: "ibnerror",
+          className: "ibn-error",
           style: {
             background:
               "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
@@ -241,162 +274,217 @@ function UploadArts() {
 
   return (
     <>
-      <div className="w-full h-screen p-3 md:p-10 overflow-y-auto">
-        <div className="w-full md:w-8/12 lg:w-6/12 h-auto p-5 bg-secondaryColor rounded-lg shadow-lg">
-          <div className="mb-10 h-auto">
+      <div className="w-full h-auto p-3 md:p-10">
+        <div className="w-full md:w-10/12 xl:w-6/12 mx-auto h-auto p-5 md:p-8 bg-secondaryColor rounded-xl shadow-2xl border border-acsentColor/10">
+          <div className="mb-10">
             <h1 className="font-bold text-xl">Upload Arts</h1>
             <p className="italic text-sm text-thirdColor">
-              show your ai arts to the worlds!
+              share your ai creations with the world!
+            </p>
+            <p className="mt-2 w-full rounded-md bg-acsentColor/10 border border-acsentColor/20 text-xs px-2 py-1">
+              Before your ai art fully published we will review your ai art
+              first, you can check your ai art status in{" "}
+              <Link
+                href="/my-collections"
+                className="font-semibold text-acsentColor hover:text-acsentColor/80"
+              >
+                My Collections
+              </Link>
             </p>
           </div>
 
-          <div className="w-full h-auto mb-5">
-            <label htmlFor="engine" className="font-bold text-thirdColor">
-              Engine
-            </label>
-            <select
-              id="engine"
-              onChange={(e) => aiEngine(e)}
-              className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
-            >
-              <option disabled selected>
-                Select AI Engine...
-              </option>
-              <option value="Midjourney">Midjourney</option>
-              <option value="Stablediffusion">Stablediffusion</option>
-              <option value="Bing AI">Bing AI</option>
-              <option value="Others">Others</option>
-            </select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="w-full h-auto relative" ref={engineRef}>
+              <label className="font-semibold text-xs uppercase tracking-widest text-thirdColor mb-3 block">
+                AI Engine
+              </label>
+
+              <div
+                onClick={() => setEngineOpen(!engineOpen)}
+                className={`
+                  w-full p-3 rounded-lg flex items-center justify-between cursor-pointer transition-all border
+                  ${AIEngine ? "bg-gradient-to-br from-acsentColor to-[#3387ae] text-white border-transparent font-bold shadow-lg" : "bg-mainColor/50 text-thirdColor border-acsentColor/10 hover:border-acsentColor/30"}
+                `}
+              >
+                <span className="text-sm">
+                  {engines.find((e) => e.value === AIEngine)?.label ||
+                    "Select Engine..."}
+                </span>
+                <IconCaretDownFilled
+                  size={16}
+                  className={`transition-transform duration-300 ${engineOpen ? "rotate-180" : ""}`}
+                />
+              </div>
+
+              {engineOpen && (
+                <div
+                  data-lenis-prevent
+                  className="absolute top-full left-0 w-full max-h-60 overflow-y-auto p-2 bg-secondaryColor border border-acsentColor/20 rounded-xl shadow-2xl z-[50] animate-in fade-in slide-in-from-top-2 duration-200"
+                >
+                  {engines.map((item) => (
+                    <div
+                      key={item.value}
+                      onClick={() => {
+                        if (item.value === "Others") setOtherSection(true);
+                        else {
+                          setOtherSection(false);
+                          setAIEngine(item.value);
+                        }
+                        setEngineOpen(false);
+                      }}
+                      className={`
+                        px-4 py-3 text-sm cursor-pointer transition-colors rounded-md
+                        ${AIEngine === item.value ? "bg-acsentColor/20 text-acsentColor font-bold" : "text-thirdColor hover:bg-mainColor hover:text-acsentColor"}
+                      `}
+                    >
+                      {item.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="w-full h-auto">
+              <label
+                htmlFor="aspect"
+                className="font-semibold text-xs uppercase tracking-widest text-thirdColor mb-3 block"
+              >
+                Aspect Ratio
+                <span className="ml-2 lowercase font-normal italic opacity-60">
+                  (auto detect)
+                </span>
+              </label>
+              <div className="w-full p-3 rounded-lg bg-mainColor/30 text-thirdColor border border-acsentColor/10 text-sm flex items-center justify-between opacity-80 cursor-not-allowed">
+                <span>
+                  {aspectRatio
+                    ? `${aspectRatio} (${aspectRatio === "1:1" ? "Square" : Number(aspectRatio.split(":")[0]) > Number(aspectRatio.split(":")[1]) ? "Landscape" : "Portrait"})`
+                    : "Waiting for image..."}
+                </span>
+                <IconRotateClockwise
+                  size={16}
+                  className={!aspectRatio ? "animate-spin" : ""}
+                />
+              </div>
+            </div>
           </div>
 
           {/* VISIBLE IF OTHERS ENGINE SELECTED */}
-
           {otherSection && (
-            <div className="w-full h-auto mb-5">
+            <div className="w-full h-auto mb-8 animate-in fade-in slide-in-from-top-2 duration-200">
+              <label className="font-semibold text-xs uppercase tracking-widest text-thirdColor mb-2 block">
+                Custom Engine Name
+              </label>
               <input
                 onChange={(e) => setAIEngine(e.target.value)}
                 type="text"
-                placeholder="What ai engine do you use?"
-                className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+                placeholder="Which AI engine did you use?"
+                className="p-3 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner outline-none border border-acsentColor/10 focus:border-acsentColor transition-colors"
               />
             </div>
           )}
 
-          <div className="w-full h-auto mb-5">
-            <label htmlFor="engine" className="font-bold text-thirdColor">
-              Aspect Ratio
-              <p className="text-xs text-thirdColor font-normal italic">
-                (auto detected from image)
-              </p>
+          <div className="w-full h-auto mb-8">
+            <label className="font-semibold text-xs uppercase tracking-widest text-thirdColor mb-3 block">
+              Image Selection
             </label>
-            <select
-              id="aspect"
-              value={aspectRatio}
-              onChange={(e) => setAspectRatio(e.target.value)}
-              className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent "
-              disabled
-            >
-              <option disabled selected>
-                Select Aspect Ratio...
-              </option>
-              <option value="16:9">16:9 (Landscape)</option>
-              <option value="2:3">2:3 (Portrait)</option>
-              <option value="1:1">1:1 (Square)</option>
-              <option value="9:16">9:16 (Story)</option>
-              {aspectRatio &&
-                !["16:9", "2:3", "1:1", "9:16"].includes(aspectRatio) && (
-                  <option value={aspectRatio}>{aspectRatio} (Detected)</option>
-                )}
-            </select>
-          </div>
 
-          <div className="w-full h-auto mb-5 font-bold text-thirdColor">
-            Upload Image
-          </div>
-
-          {images.length > 0 && (
-            <div className="w-auto h-auto p-3 rounded-lg bg-mainColor shadow-inner mb-5 flex flex-col items-center justify-center">
-              <p className="italic text-xs mb-2">
-                {" "}
-                Here's the preview of your uploaded image
-              </p>
-              {images.map((item, index) => {
-                return (
-                  <>
-                    <div className="w-fit h-fit relative transition duration-500 hover:scale-95 cursor-pointer hover:shadow-[0_0_20px_-10px_rgba(137,190,172,0.5)] hover:shadow-lg">
+            {images.length > 0 ? (
+              <div className="w-full p-4 rounded-xl bg-mainColor/30 border border-dashed border-acsentColor/20 mb-5">
+                <p className="italic text-[10px] text-thirdColor/60 mb-4 text-center uppercase tracking-widest">
+                  Preview Selection
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {images.map((item, index) => (
+                    <div
+                      key={index}
+                      className="group relative w-32 h-32 rounded-lg overflow-hidden border border-acsentColor/20 shadow-xl"
+                    >
                       <img
                         src={URL.createObjectURL(item.file)}
-                        alt=""
-                        className="w-[150px] rounded-md"
+                        alt="Preview"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div
                         onClick={() => removeImage(index)}
-                        className="absolute top-2 right-2 w-4 h-4 rounded-full border border-acsentColor flex justify-center items-center cursor-pointer hover:bg-[var(--acsentColor)] hover:text-mainColor"
+                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
                       >
-                        <IconX size={12} />
+                        <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg">
+                          <IconX size={16} />
+                        </div>
                       </div>
                     </div>
-                  </>
-                );
-              })}
-            </div>
-          )}
-
-          {images.length <= 0 && (
-            <div className="flex items-center justify-center w-full mb-5">
-              <label
-                for="dropzone-file"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-acsentColor border-dashed rounded-lg cursor-pointer bg-mainColor  hover:bg-mainColor/50 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg
-                    className="w-8 h-8 mb-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
-                  <p className="mb-2 text-sm">
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
-                  </p>
-                  <p className="text-xs">
-                    SVG, PNG, JPG or GIF (MAX. 800x400px)
-                  </p>
+                  ))}
                 </div>
-                <input
-                  id="dropzone-file"
-                  onChange={(e) => selectedFiles(e)}
-                  type="file"
-                  multiple="multiple"
-                  accept="image/*"
-                  className="hidden"
-                />
-              </label>
-            </div>
-          )}
+                <button
+                  onClick={() => {
+                    setImages([]);
+                    setDataImage([]);
+                  }}
+                  className="w-full mt-4 text-[10px] uppercase font-bold text-red-400 hover:text-red-500 transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center w-full">
+                <label
+                  htmlFor="dropzone-file"
+                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-acsentColor/10 border-dashed rounded-xl cursor-pointer bg-mainColor/30 hover:bg-mainColor/50 hover:border-acsentColor/30 transition-all group"
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <div className="w-12 h-12 rounded-full bg-acsentColor/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <svg
+                        className="w-6 h-6 text-acsentColor"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 16"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                        />
+                      </svg>
+                    </div>
+                    <p className="mb-2 text-sm text-acsentColor font-semibold">
+                      Click to upload arts
+                    </p>
+                    <p className="text-xs text-thirdColor">
+                      PNG, JPG, or WEBP (Standard high-res)
+                    </p>
+                  </div>
+                  <input
+                    id="dropzone-file"
+                    onChange={(e) => selectedFiles(e)}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            )}
+          </div>
 
-          <div className="w-full h-auto">
+          <div className="w-full flex justify-end items-center pt-4 border-t border-acsentColor/10">
             {uploadProgress ? (
-              <div className="text-center">
-                <IconRotateClockwise className="animate-spin inline-block mr-2" />
-                Upload Progress...
+              <div className="flex items-center gap-3 text-acsentColor font-semibold italic text-sm">
+                <IconRotateClockwise className="animate-spin" size={20} />
+                Uploading your art...
               </div>
             ) : (
               <button
                 onClick={() => uploadNow()}
-                className="p-3 mb-5 border border-acsentColor rounded-lg float-end flex justify-center items-center text-sm font-semibold hover:bg-acsentBtn"
+                className="group px-6 py-3 bg-acsentColor/10 border border-acsentColor/20 text-thirdColor hover:bg-acsentBtn hover:text-acsentColor rounded-xl flex items-center gap-2 text-xs font-semibold transition-all active:scale-95 shadow-lg"
               >
-                <IconWorld className="inline-block mr-2" size={16} /> Publish
-                Now!
+                <IconWorld
+                  size={16}
+                  className="group-hover:rotate-12 transition-transform"
+                />
+                Publish Now
               </button>
             )}
           </div>

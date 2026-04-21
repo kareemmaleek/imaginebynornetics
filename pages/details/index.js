@@ -1,8 +1,12 @@
-import DetailsImage from '@/_components/DetailsImage'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 
 function index() {
-  return <DetailsImage/>
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/");
+  }, []);
+  return null;
 }
 
 export default index

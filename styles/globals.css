@@ -16,16 +16,78 @@
   }
 }
 
+html {
+  overflow-y: scroll;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 body {
   background-color: #172a32;
   color: #89beac;
   font-family: "Titillium Web", sans-serif;
 }
 
-.ibn-error {
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(137, 190, 172, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(137, 190, 172, 0.4);
+}
+
+.ibn-error,
+.ibnerror {
   background: linear-gradient(
     109.6deg,
     rgba(217, 67, 67, 1) 11.2%,
     rgba(242, 106, 75, 1) 100.6%
-  );
+  ) !important;
+}
+
+.ibn-success,
+.ibnsuccess {
+  background: linear-gradient(
+    109.6deg,
+    rgba(24, 138, 141, 1) 11.2%,
+    rgba(96, 221, 142, 1) 91.1%
+  ) !important;
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

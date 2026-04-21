@@ -1,10 +1,9 @@
 import moment from "moment";
 import { execQuery } from "@/config/db";
 import jwt from "jsonwebtoken";
+import sharp from "sharp";
 
 const JWT_SECRET = process.env.JWT_SECRET || "ibn_secret_key_2024";
-import xbytes from "xbytes";
-
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
@@ -16,7 +15,6 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const imageID = crypto.randomBytes(16).toString("hex");
-    //cb(null, `IBN002.${getFormat}`);
     cb(null, `${imageID}-IBN${path.extname(file.originalname)}`);
   },
 });
@@ -29,20 +27,17 @@ const upload = multer({
 const getAspectRatio = (imgWidth, imgHeight) => {
   const w = imgWidth;
   const h = imgHeight;
-
   const gcd = (...arr) => {
     const _gcd = (x, y) => (!y ? x : gcd(y, x % y));
     return [...arr].reduce((a, b) => _gcd(a, b));
   };
-
   const gcdResult = gcd(w, h);
-
   return `${w / gcdResult}:${h / gcdResult}`;
 };
 
 export const config = {
   api: {
-    bodyParser: false, // Disable body parsing, multer will handle it
+    bodyParser: false,
   },
 };
 
@@ -50,71 +45,77 @@ export default async function uploadImages(req, res) {
   if (req.method !== "POST")
     return res.status(403).json({ message: "Not Allowed!" });
 
-  // Extract user from token
   let createdBy = null;
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer ")) {
     try {
       const decoded = jwt.verify(authHeader.split(" ")[1], JWT_SECRET);
       createdBy = decoded.uid;
-    } catch (e) {
-      // token invalid, use default null
-    }
+    } catch (e) {}
   }
 
-  await upload.array("images", 12)(req, res, (err) => {
+  await upload.array("images", 12)(req, res, async (err) => {
     if (err) return res.status(400).json({ error: 1, message: err.code });
 
     const { engine, aspect_ratio } = req.body;
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
 
-    res.req.files.map(async (item) => {
-      // console.log(item.filename);
-      // console.log(xbytes(item.size));
-      // console.log(item.path);
+    try {
+      for (const item of res.req.files) {
+        if (!mimeTypes.includes(item.mimetype)) {
+          return res.status(400).json({ error: 1, message: "Invalid format" });
+        }
 
-      const fileName = item.filename;
-      const fileSize = item.size;
-      const filePath = path.join(__dirname, "../../../../../", item.path);
-      const fileType = item.mimetype;
-      const mimeType = ["image/png", "image/jpg", "image/jpeg"];
+        const fileName = item.filename;
+        const fileSize = item.size;
+        const filePath = path.join(process.cwd(), item.path);
+        const imgDimension = sizeOf(filePath);
+        const fileAspectRatio =
+          aspect_ratio || getAspectRatio(imgDimension.width, imgDimension.height);
 
-      console.log(fileType);
+        // Generate WebP Thumbnail
+        const thumbName = `${fileName.split("-IBN")[0]}-thumb.webp`;
+        const thumbPath = path.join(path.dirname(filePath), thumbName);
 
-      if (!mimeType.includes(fileType))
-        return res
-          .status(400)
-          .json({ error: 1, message: "Image format not allowed" });
+        await sharp(filePath)
+          .webp({ quality: 70 })
+          .resize(800, null, { withoutEnlargement: true })
+          .toFile(thumbPath);
 
-      const imgDimension = sizeOf(filePath);
-      const fileAspectRatio =
-        aspect_ratio || getAspectRatio(imgDimension.width, imgDimension.height);
+        const uid = crypto.randomUUID();
+        const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
-      const uid = crypto.randomUUID();
-
-      try {
-        const query = await execQuery(
-          "INSERT INTO images (uid, img_name, status, created_by, img_engine, img_views, img_download, file_size, img_ratio, img_path) VALUES (?,?,?,?,?,?,?,?,?,?)",
+        await execQuery(
+          "INSERT INTO medias (uid, media_name, status, created_by, media_engine, media_views, media_download, file_size, media_ratio, content_type, approval_status, created_at, media_path, media_thumb) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
           [
             uid,
             fileName,
-            0,
+            1,
             createdBy,
             engine,
             0,
             0,
             fileSize,
             fileAspectRatio,
+            "image",
+            "pending",
+            createdAt,
             item.path.replaceAll("\\", "/").replace("public", ""),
+            item.path
+              .replaceAll("\\", "/")
+              .replace("public", "")
+              .replace(fileName, thumbName),
           ],
         );
-
-        res.status(200).json({
-          error: 0,
-          message: "Images upload sucessfully!",
-        });
-      } catch (err) {
-        res.status(400).json({ error: 1, message: err });
       }
-    });
+
+      return res.status(200).json({
+        error: 0,
+        message: "Images uploaded successfully!",
+      });
+    } catch (dbErr) {
+      console.error(dbErr);
+      return res.status(500).json({ error: 1, message: "Internal server error" });
+    }
   });
 }

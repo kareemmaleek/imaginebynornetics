@@ -10,7 +10,7 @@ function imgDetails() {
     if (router.isReady) setUID(router.query.uid);
   }, [router.isReady]);
 
-  return <>{uid !== "" ? <DetailsImage img_id={uid} /> : null}</>;
+  return <>{uid !== "" ? <DetailsImage media_id={uid} /> : null}</>;
 }
 
 export default imgDetails;

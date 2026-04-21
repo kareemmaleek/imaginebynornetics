@@ -11,21 +11,21 @@ export default async function upViews(req, res) {
 
   try {
     const queryGet = await execQuery(
-      "SELECT img_views FROM images WHERE uid = ?",
+      "SELECT media_views FROM medias WHERE uid = ?",
       [id],
     );
 
-    const currentViews = queryGet[0].img_views;
+    const currentViews = queryGet[0].media_views;
     const increment = currentViews + 1;
 
-    const query = execQuery("UPDATE images SET img_views = ?  WHERE uid = ?", [
-      increment,
-      id,
-    ]);
+    const query = execQuery(
+      "UPDATE medias SET media_views = ?  WHERE uid = ?",
+      [increment, id],
+    );
 
     // res.status(200).json({
     //   error: 0,
-    //   data: queryGet[0].img_views,
+    //   data: queryGet[0].media_views,
     // });
 
     return res.status(200).json({

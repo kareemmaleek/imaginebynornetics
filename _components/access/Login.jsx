@@ -22,7 +22,7 @@ function Login() {
         close: true,
         position: "center",
         stopOnFocus: true,
-        className: "ibnerror",
+        className: "ibn-error",
         style: {
           background:
             "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
@@ -45,7 +45,7 @@ function Login() {
           close: true,
           position: "center",
           stopOnFocus: true,
-          className: "ibnerror",
+          className: "ibn-error",
           style: {
             background:
               "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
@@ -96,41 +96,47 @@ function Login() {
         Sign in using email and password to access creator panel
       </p>
       <div className="w-full h-auto mb-5">
-        <label htmlFor="email-log" className="font-bold text-thirdColor">
+        <label
+          htmlFor="email-log"
+          className="font-bold text-thirdColor text-sm"
+        >
           Email
         </label>
         <input
           type="text"
           id="email-log"
           placeholder="Email address"
-          className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+          className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor/20 focus:ring-acsentColor/20"
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="w-full h-auto mb-5">
-        <label htmlFor="pwd-log" className="font-bold text-thirdColor">
+        <label htmlFor="pwd-log" className="font-bold text-thirdColor text-sm">
           Password
         </label>
         <input
           type="password"
           id="pwd-log"
           placeholder="Enter your password"
-          className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor focus:ring-acsentColor"
+          className="p-3 mt-1 w-full text-sm rounded-lg bg-mainColor text-acsentColor shadow-inner appearance-none outline-none ring-1 ring-transparent duration-200 hover:ring-acsentColor/20 focus:ring-acsentColor/20"
           onChange={(e) => setPwd(e.target.value)}
         />
       </div>
 
       {loginProgress ? (
         <>
-          <IconRotateClockwise className="animate-spin inline-block mr-2" />{" "}
-          Sign In Progress...
+          <IconRotateClockwise
+            className="animate-spin inline-block mr-2"
+            size={18}
+          />{" "}
+          <span className="text-sm">Sign In Progress...</span>
         </>
       ) : (
         <button
           onClick={() => loginProcess()}
-          className="w-full h-auto p-1 border border-acsentColor rounded-lg hover:bg-acsentColor/5 hover:text-acsentColor hover:font-bold"
+          className="w-full h-auto p-2 text-sm rounded-lg border bg-acsentColor/10 border-acsentColor/20 text-thirdColor hover:bg-acsentBtn hover:text-acsentColor hover:font-semibold"
         >
-          Sign In <IconLogin className="inline-block ml-2" />
+          Sign In <IconLogin className="inline-block ml-2" size={18} />
         </button>
       )}
     </>

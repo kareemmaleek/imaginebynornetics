@@ -11,21 +11,21 @@ export default async function upDownloads(req, res) {
 
   try {
     const queryGet = await execQuery(
-      "SELECT img_download FROM images WHERE id = ?",
-      [id]
+      "SELECT media_download FROM medias WHERE id = ?",
+      [id],
     );
 
-    const currentDownload = queryGet[0].img_download;
+    const currentDownload = queryGet[0].media_download;
     const increment = currentDownload + 1;
 
     const query = execQuery(
-      "UPDATE images SET img_download = ?  WHERE id = ?",
-      [increment, id]
+      "UPDATE medias SET media_download = ?  WHERE id = ?",
+      [increment, id],
     );
 
     // res.status(200).json({
     //   error: 0,
-    //   data: queryGet[0].img_views,
+    //   data: queryGet[0].media_views,
     // });
 
     return res.status(200).json({
