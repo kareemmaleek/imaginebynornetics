@@ -93,7 +93,7 @@ export default async function uploadImages(req, res) {
         const createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
         await execQuery(
-          "INSERT INTO medias (uid, media_name, status, created_by, media_engine, media_views, media_download, file_size, media_ratio, content_type, approval_status, created_at, media_path, media_thumb) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO medias (uid, media_name, status, created_by, media_engine, media_views, media_download, file_size, media_ratio, content_type, approval_status, created_at, media_path, media_thumb, media_width, media_height) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
           [
             uid,
             fileName,
@@ -112,6 +112,8 @@ export default async function uploadImages(req, res) {
               .replace(/\\/g, "/")
               .split("/public")[1]
               .replace(fileName, thumbName) || item.path,
+            imgDimension.width,
+            imgDimension.height,
           ],
         );
       }

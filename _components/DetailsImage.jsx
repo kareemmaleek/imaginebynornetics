@@ -203,7 +203,7 @@ function DetailsImage({ media_id }) {
     }
   };
 
-  const getInitials = (name) => {
+  const getInitials = (name = "ibn") => {
     if (!name) return "??";
     const initials = name
       .split(/(?=[A-Z])|[\s_-]/)
@@ -218,7 +218,7 @@ function DetailsImage({ media_id }) {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const getGradient = (name) => {
+  const getGradient = (name = "ibn") => {
     const gradients = [
       "from-pink-500 to-rose-500",
       "from-blue-500 to-indigo-500",
@@ -234,6 +234,10 @@ function DetailsImage({ media_id }) {
     const index = Math.abs(hash) % gradients.length;
     return gradients[index];
   };
+
+  useEffect(() => {
+    console.log(dataImage);
+  }, [dataImage]);
 
   return (
     <>
@@ -304,9 +308,9 @@ function DetailsImage({ media_id }) {
             <div className="w-full h-auto p-5 bg-secondaryColor rounded-lg mb-5 border border-acsentColor/20">
               <div className="w-full h-auto flex items-center gap-2 mb-3">
                 <div
-                  className={`w-10 h-10 rounded-full bg-gradient-to-tr ${getGradient(dataImage.creator_name)} shadow-md flex items-center justify-center text-sm font-bold text-white uppercase border border-white/10`}
+                  className={`w-10 h-10 rounded-full bg-gradient-to-tr ${getGradient(dataImage?.creator_name)} shadow-md flex items-center justify-center text-sm font-bold text-white uppercase border border-white/10`}
                 >
-                  {getInitials(dataImage.creator_name)}
+                  {getInitials(dataImage?.creator_name)}
                 </div>
                 <div className="w-fit flex flex-col">
                   <h1 className="font-semibold hover:underline cursor-pointer">
@@ -351,6 +355,12 @@ function DetailsImage({ media_id }) {
                   <div className="w-fit p-2 px-3 text-xs rounded-md bg-mainColor flex items-center gap-2">
                     <span className="text-thirdColor">Size:</span>
                     {dataImage.file_size}
+                  </div>
+                  <div className="w-fit p-2 px-3 text-xs rounded-md bg-mainColor flex items-center gap-2">
+                    <span className="text-thirdColor">Dimensions:</span>
+                    {dataImage.media_width && dataImage.media_height
+                      ? `${dataImage.media_width} x ${dataImage.media_height}`
+                      : "Unknown"}
                   </div>
                   <div className="w-fit p-2 px-3 text-xs rounded-md bg-mainColor flex items-center gap-2">
                     <span className="text-thirdColor">Content Type:</span>
