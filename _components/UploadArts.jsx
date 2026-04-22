@@ -87,14 +87,14 @@ function UploadArts() {
     const cv = Array.from(e.target.files);
 
     setDataImage(cv);
+    // Masukkan placeholder ratio saat loading
     setImages(
       cv.map((item) => {
-        return { name: item.name, file: item };
+        return { name: item.name, file: item, ratio: "Detecting..." };
       }),
     );
 
-    if (cv.length > 0) {
-      const file = cv[0];
+    cv.forEach((file, index) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
@@ -124,19 +124,29 @@ function UploadArts() {
             }
           });
 
-          // If the difference is small enough (tolerance 0.1), snap to standard
+          let finalRatio = "";
           if (minDiff < 0.1) {
-            setAspectRatio(closest.label);
+            finalRatio = closest.label;
           } else {
             const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
             const common = gcd(w, h);
-            setAspectRatio(`${w / common}:${h / common}`);
+            finalRatio = `${w / common}:${h / common}`;
           }
+
+          // Update ratio spesifik gambar ini
+          setImages((prev) =>
+            prev.map((item, i) =>
+              i === index ? { ...item, ratio: finalRatio } : item,
+            ),
+          );
+
+          // Jika gambar pertama, set main aspect ratio sebagai default
+          if (index === 0) setAspectRatio(finalRatio);
         };
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
   const uploadNow = async () => {
@@ -377,7 +387,7 @@ function UploadArts() {
               )}
             </div>
 
-            <div className="w-full h-auto">
+            {/* <div className="w-full h-auto">
               <label
                 htmlFor="aspect"
                 className="font-semibold text-xs uppercase tracking-widest text-thirdColor mb-3 block"
@@ -398,7 +408,7 @@ function UploadArts() {
                   className={!aspectRatio ? "animate-spin" : ""}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* VISIBLE IF OTHERS ENGINE SELECTED */}
@@ -430,20 +440,27 @@ function UploadArts() {
                   {images.map((item, index) => (
                     <div
                       key={index}
-                      className="group relative w-32 h-32 rounded-lg overflow-hidden border border-acsentColor/20 shadow-xl"
+                      className="group relative w-32 h-auto flex flex-col"
                     >
-                      <img
-                        src={URL.createObjectURL(item.file)}
-                        alt="Preview"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div
-                        onClick={() => removeImage(index)}
-                        className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg">
-                          <IconX size={16} />
+                      <div className="w-32 h-32 rounded-lg overflow-hidden border border-acsentColor/20 shadow-xl relative">
+                        <img
+                          src={URL.createObjectURL(item.file)}
+                          alt="Preview"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div
+                          onClick={() => removeImage(index)}
+                          className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg">
+                            <IconX size={16} />
+                          </div>
                         </div>
+                      </div>
+                      <div className="mt-1 w-full text-center">
+                        <span className="text-[9px] font-bold text-acsentColor bg-acsentColor/10 px-2 py-0.5 rounded-full border border-acsentColor/20">
+                          {item.ratio}
+                        </span>
                       </div>
                     </div>
                   ))}
