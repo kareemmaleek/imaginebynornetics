@@ -13,6 +13,7 @@ const fs = require("fs");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(process.cwd(), "public", "assets", "uploads");
+    console.log("Saving file to:", uploadDir); // Tambahkan log ini
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -76,7 +77,8 @@ export default async function uploadImages(req, res) {
         const filePath = item.path;
         const imgDimension = sizeOf(filePath);
         const fileAspectRatio =
-          aspect_ratio || getAspectRatio(imgDimension.width, imgDimension.height);
+          aspect_ratio ||
+          getAspectRatio(imgDimension.width, imgDimension.height);
 
         // Generate WebP Thumbnail
         const thumbName = `${fileName.split("-IBN")[0]}-thumb.webp`;
@@ -120,7 +122,9 @@ export default async function uploadImages(req, res) {
       });
     } catch (dbErr) {
       console.error(dbErr);
-      return res.status(500).json({ error: 1, message: "Internal server error" });
+      return res
+        .status(500)
+        .json({ error: 1, message: "Internal server error" });
     }
   });
 }
