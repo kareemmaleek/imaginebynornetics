@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 
 function index() {
-  const [accessOpt, setAccessOpt] = useState(false);
+  const [accessOpt, setAccessOpt] = useState("login");
   const router = useRouter();
 
   useEffect(() => {
@@ -46,16 +46,22 @@ function index() {
             </div>
             <div className="w-full md:w-6/12 h-full p-6 md:p-10 flex justify-center items-center">
               <div className="w-full h-auto">
-                {!accessOpt ? <Login /> : <Signup />}
+                {accessOpt === "login" ? (
+                  <Login />
+                ) : (
+                  <Signup isSuccess={(data) => setAccessOpt(data)} />
+                )}
                 <p className="mt-5 text-sm">
-                  {!accessOpt
+                  {accessOpt === "login"
                     ? "Don't have an account? "
                     : "Already have an account? "}
                   <strong
-                    onClick={() => setAccessOpt(!accessOpt)}
+                    onClick={() =>
+                      setAccessOpt(accessOpt === "login" ? "signup" : "login")
+                    }
                     className="italic cursor-pointer"
                   >
-                    {!accessOpt ? "Sign up now!" : "Login here!"}
+                    {accessOpt === "login" ? "Sign up now!" : "Login here!"}
                   </strong>
                 </p>
               </div>

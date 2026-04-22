@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 
-function Signup({ onNavigate }) {
+function Signup({ isSuccess }) {
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
@@ -62,8 +62,8 @@ function Signup({ onNavigate }) {
               : "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
           },
           callback: function () {
-            if (onNavigate) onNavigate();
-            route.push("/access");
+            setSignProgress(false);
+            isSuccess("login");
           },
         }).showToast();
       })
