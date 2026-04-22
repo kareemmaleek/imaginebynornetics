@@ -67,9 +67,9 @@ export default async function uploadImages(req, res) {
     const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
 
     try {
-      for (const item of res.req.files) {
+      const uploadPromises = res.req.files.map(async (item) => {
         if (!mimeTypes.includes(item.mimetype)) {
-          return res.status(400).json({ error: 1, message: "Invalid format" });
+          throw new Error("Invalid format");
         }
 
         const fileName = item.filename;
@@ -116,7 +116,9 @@ export default async function uploadImages(req, res) {
             imgDimension.height,
           ],
         );
-      }
+      });
+
+      await Promise.all(uploadPromises);
 
       return res.status(200).json({
         error: 0,

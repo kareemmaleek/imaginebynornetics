@@ -181,7 +181,7 @@ function UploadArts() {
 
     try {
       await axios
-        .post("/api/upload/art/", data, {
+        .post("/api/upload/art", data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
