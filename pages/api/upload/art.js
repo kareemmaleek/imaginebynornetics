@@ -8,10 +8,15 @@ const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
 const sizeOf = require("image-size");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/assets/uploads");
+    const uploadDir = path.join(process.cwd(), "public", "assets", "uploads");
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const imageID = crypto.randomBytes(16).toString("hex");
@@ -68,7 +73,7 @@ export default async function uploadImages(req, res) {
 
         const fileName = item.filename;
         const fileSize = item.size;
-        const filePath = path.join(process.cwd(), item.path);
+        const filePath = item.path;
         const imgDimension = sizeOf(filePath);
         const fileAspectRatio =
           aspect_ratio || getAspectRatio(imgDimension.width, imgDimension.height);
@@ -100,11 +105,11 @@ export default async function uploadImages(req, res) {
             "image",
             "pending",
             createdAt,
-            item.path.replaceAll("\\", "/").replace("public", ""),
+            item.path.replace(/\\/g, "/").split("/public")[1] || item.path,
             item.path
-              .replaceAll("\\", "/")
-              .replace("public", "")
-              .replace(fileName, thumbName),
+              .replace(/\\/g, "/")
+              .split("/public")[1]
+              .replace(fileName, thumbName) || item.path,
           ],
         );
       }
