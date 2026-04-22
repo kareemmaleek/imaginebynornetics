@@ -179,59 +179,77 @@ function UploadArts() {
 
     const token = localStorage.getItem("ibn_token");
 
-    await axios
-      .post("/api/upload/art/", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data.error);
+    try {
+      await axios
+        .post("/api/upload/art/", data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data.error);
 
-        if (response.data.error === 0)
+          if (response.data.error === 0)
+            return Toastify({
+              text: "AI Art Uploaded Successfully!",
+              duration: 2000,
+              close: true,
+              position: "center",
+              stopOnFocus: true,
+              escapeMarkup: true,
+              className: "ibn-success",
+              style: {
+                background:
+                  "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+              },
+              callback: function () {
+                setImages([]);
+                setOtherSection(false);
+                setAIEngine("");
+                setDataImage([]);
+                setUploadProgress(false);
+              },
+            }).showToast();
+        })
+        .catch((error) => {
+          // console.log(error.response.data);
+
           return Toastify({
-            text: "AI Art Uploaded Successfully!",
+            text: error.response.data.message,
             duration: 2000,
             close: true,
             position: "center",
             stopOnFocus: true,
             escapeMarkup: true,
-            className: "ibn-success",
+            className: "ibn-error",
             style: {
               background:
-                "linear-gradient( 109.6deg,  rgba(24,138,141,1) 11.2%, rgba(96,221,142,1) 91.1% )",
+                "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
             },
             callback: function () {
               setImages([]);
-              setOtherSection(false);
-              setAIEngine("");
               setDataImage([]);
               setUploadProgress(false);
             },
           }).showToast();
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-
-        return Toastify({
-          text: error.response.data.message,
-          duration: 2000,
-          close: true,
-          position: "center",
-          stopOnFocus: true,
-          escapeMarkup: true,
-          className: "ibn-error",
-          style: {
-            background:
-              "linear-gradient( 109.6deg,  rgba(217,67,67,1) 11.2%, rgba(242,106,75,1) 100.6% )",
-          },
-          callback: function () {
-            setImages([]);
-            setDataImage([]);
-            setUploadProgress(false);
-          },
-        }).showToast();
-      });
+        });
+    } catch (err) {
+      // console.log(err);
+      return Toastify({
+        text: err.message,
+        duration: 2000,
+        close: true,
+        position: "center",
+        stopOnFocus: true,
+        escapeMarkup: true,
+        className: "ibn-error",
+        callback: function () {
+          setImages([]);
+          setDataImage([]);
+          setUploadProgress(false);
+        },
+      }).showToast();
+    }
   };
 
   const aiEngine = (e) => {
