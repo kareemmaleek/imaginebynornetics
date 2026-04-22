@@ -49,6 +49,21 @@ function UploadArts() {
   const selectedFiles = (e) => {
     const file = e.target.files;
 
+    if (file.length > 10) {
+      return Toastify({
+        text: "Oopss! Maximum 10 images are allowed",
+        duration: 3000,
+        close: true,
+        position: "center",
+        stopOnFocus: true,
+        className: "ibn-error",
+        style: {
+          background:
+            "linear-gradient(109.6deg, rgba(217, 67, 67, 1) 11.2%, rgba(242, 106, 75, 1) 100.6%)",
+        },
+      }).showToast();
+    }
+
     for (var i = 0; i < file.length; i++) {
       //console.log(file[i]);
 
@@ -471,7 +486,7 @@ function UploadArts() {
                       Click to upload arts
                     </p>
                     <p className="text-xs text-thirdColor">
-                      PNG, JPG, or WEBP (Standard high-res)
+                      PNG, JPG, or WEBP (Max 10 images)
                     </p>
                   </div>
                   <input
