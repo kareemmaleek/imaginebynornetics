@@ -350,7 +350,7 @@ function Gallery() {
                 <Link href={`/details/${item.uid}`} key={item.uid || x}>
                   <div
                     ref={isLast ? lastImageRef : null}
-                    className="group w-auto h-auto relative shadow-lg hover:scale-95 duration-300"
+                    className="group w-auto h-auto relative shadow-lg"
                   >
                     <LazyImage
                       src={item.media_thumb || item.media_path}
